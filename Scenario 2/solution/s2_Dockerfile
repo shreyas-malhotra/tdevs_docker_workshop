@@ -1,0 +1,17 @@
+M maven:3.9.9-eclipse-temurin-21 AS builder
+
+COPY . /app
+
+WORKDIR /app
+
+RUN mvn clean package
+
+FROM eclipse-temurin:21-jre AS production
+
+WORKDIR /app
+
+COPY --from=builder /app/target/dockermastery-0.0.1-SNAPSHOT.jar /app/dockermastery.jar
+
+EXPOSE 8080
+
+ENTRYPOINT [ "java",  "-jar", "dockermastery.jar"]
